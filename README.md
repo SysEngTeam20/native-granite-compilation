@@ -1,7 +1,10 @@
 # Granite Compiled Inference via llama.cpp
  - Marwan Yassini Chairi El Kamel
+ Forked - HTTP server for llama.cpp by:
+ - Allen Bridi
+
 ## Overview
-This repository contains instructions and a simple script allowing for compiled inference of GGUF files utilising the API provided by llama.cpp
+This repository contains instructions and a simple script allowing for compiled inference of GGUF files utilising the API provided by llama.cpp and http server provided by cpp-httplib.
 
 ## Prerequisites
 - CMake
@@ -17,19 +20,25 @@ This repository contains instructions and a simple script allowing for compiled 
     git clone https://github.com/ggml-org/llama.cpp
     ```
 
-3. Build the library
+2. Clone cpp-httplib into the same folder
+    ```bash
+    git clone https://github.com/yhirose/cpp-httplib.git
+    ```
+
+4. Build the llama.cpp library
     ```bash
     cd llama.cpp
     cmake -B build
     cmake --build build --config Release
     ```
-4. Compile the program
+
+5. Compile the program
     ```bash
-    clang++ -std=c++11 -I./llama.cpp/include -I./llama.cpp/ggml/include main.cpp ./llama.cpp/build/bin/libllama.dylib -o gguf_infer -pthread -Wl,-rpath,./llama.cpp/build/bin;
+    clang++ -std=c++11 -I./llama.cpp/include -I./llama.cpp/ggml/include -I./httplib main.cpp ./llama.cpp/build/bin/libllama.dylib -o llm_server -pthread -Wl,-rpath,./llama.cpp/build/bin;
     ```
 
-5. Run the program with the following parameters
+5. Run the server with the following parameters
     ```bash
-    ./gguf_infer <model-path.gguf> "<prompt text>"
+    ./llm_server <model-path.gguf> <server-port>
     ```
 

@@ -2,3 +2,6 @@
 /granite-3.1-8b-instruct-Q6_K.gguf
 /gguf_infer
 /models/**
+/ibm-granite_granite-3.2-2b-instruct-IQ2_M.gguf
+/cpp-httplib
+/llm_server
