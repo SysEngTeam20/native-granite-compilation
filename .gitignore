@@ -6,3 +6,6 @@
 /cpp-httplib
 /llm_server
 granite.gguf
+*.dll
+*.gguf
+llm_server.exe
