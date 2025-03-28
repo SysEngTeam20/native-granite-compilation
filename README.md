@@ -10,7 +10,9 @@ This repository contains instructions and a simple script allowing for compiled 
 - CMake
 - C++ Compiler (g++, clang)
 - GGUF File for Granite (any other model works)
-    https://huggingface.co/lmstudio-community/granite-3.2-8b-instruct-GGUF
+    - Download from UCL SharePoint: [granite-3.1-8b-instruct-Q6_K.gguf](https://liveuclac-my.sharepoint.com/:u:/g/personal/zcababr_ucl_ac_uk/EXqhxvYjBXNGiYGeJYirz9UBIpo1_3Lmpembm1HkUz3kQQ?e=I0Vhn3)
+    - Place the downloaded GGUF file in the project root directory
+    - Alternative source: https://huggingface.co/lmstudio-community/granite-3.2-8b-instruct-GGUF
 
 ## Installation
 1. Clone this repository
