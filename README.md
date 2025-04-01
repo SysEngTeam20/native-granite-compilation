@@ -1,6 +1,5 @@
 # Granite Compiled Inference via llama.cpp
- - Marwan Yassini Chairi El Kamel
- Forked - HTTP server for llama.cpp by:
+ This is a fork of [native-granite-compilation](https://github.com/quantum-proximity-gateway/native-granite-compilation) which implements more advanced features such as support for Windows compilation and HTTP server for easier/better external services calling.
  - Allen Bridi
 
 ## Overview
