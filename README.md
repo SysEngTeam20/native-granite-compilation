@@ -145,110 +145,40 @@ If the server doesn't respond to requests:
 
 ### Docker Deployment
 
-1. Create a Dockerfile:
-```dockerfile
-FROM ubuntu:22.04
+1. Build the Docker image:
+   ```bash
+   docker build -t llm-server:latest .
+   ```
 
-# Install dependencies
-RUN apt-get update && apt-get install -y \
-    build-essential \
-    cmake \
-    git \
-    curl \
-    && rm -rf /var/lib/apt/lists/*
+2. Run the container:
+   ```bash
+   docker run -p 8080:8080 llm-server:latest
+   ```
 
-# Clone repositories
-RUN git clone https://github.com/ggerganov/llama.cpp && \
-    git clone https://github.com/yhirose/cpp-httplib httplib
+## Kubernetes Deployment
 
-# Build llama.cpp
-WORKDIR /app/llama.cpp
-RUN cmake -B build && \
-    cmake --build build --config Release
+1. Apply the Kubernetes configurations:
+   ```bash
+   kubectl apply -f k8s/
+   ```
 
-# Copy application files
-WORKDIR /app
-COPY main.cpp .
-COPY *.gguf .
+2. Check the deployment status:
+   ```bash
+   kubectl get pods
+   kubectl get services
+   kubectl get ingress
+   ```
 
-# Compile the server
-RUN g++ -std=c++11 \
-    -I./llama.cpp/include \
-    -I./llama.cpp/ggml/include \
-    -I./httplib \
-    main.cpp \
-    ./llama.cpp/build/bin/libllama.so \
-    -o llm_server \
-    -pthread
+3. Access the service:
+   - If using LoadBalancer: Access via the external IP
+   - If using Ingress: Access via your configured domain
 
-# Expose port
-EXPOSE 8080
+### Kubernetes Configuration Notes
 
-# Run the server
-CMD ["./llm_server", "model.gguf", "8080"]
-```
-
-2. Build and run the container:
-```bash
-docker build -t granite-inference .
-docker run -p 8080:8080 granite-inference
-```
-
-### Kubernetes Deployment
-
-1. Create a Kubernetes deployment manifest:
-```yaml
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: granite-inference
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: granite-inference
-  template:
-    metadata:
-      labels:
-        app: granite-inference
-    spec:
-      containers:
-      - name: granite-inference
-        image: granite-inference:latest
-        ports:
-        - containerPort: 8080
-        resources:
-          requests:
-            memory: "8Gi"
-            cpu: "4"
-          limits:
-            memory: "16Gi"
-            cpu: "8"
-        volumeMounts:
-        - name: model-storage
-          mountPath: /app
-      volumes:
-      - name: model-storage
-        persistentVolumeClaim:
-          claimName: model-pvc
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: granite-inference
-spec:
-  selector:
-    app: granite-inference
-  ports:
-  - port: 80
-    targetPort: 8080
-  type: LoadBalancer
-```
-
-2. Deploy to Kubernetes:
-```bash
-kubectl apply -f k8s-deployment.yaml
-```
+- The deployment uses resource limits to ensure stable operation
+- Persistent volume is used to store the model file
+- Ingress is configured with increased timeouts for long-running requests
+- Adjust memory and CPU requirements based on your model size and performance needs
 
 ### IBM Cloud Deployment
 
